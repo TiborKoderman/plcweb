@@ -3,7 +3,8 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> | 
     <router-link to="/login">Login</router-link>
-     <router-view/>
+     <!-- <router-view/> -->
+     <router-view @connectionSuccessful="handleConnectionSuccessful"></router-view>
   </div>
  
 </template>
@@ -11,14 +12,19 @@
 <script>
 export default {
   name: 'App',
-  data: function() {
+  data() {
     return {
       connection: null,
       loggedin: false,
     }
   },
-  created: function() {
-
+  methods:{
+    handleConnectionSuccessful(connection){
+      this.loggedin=true;
+      this.connection = connection;
+      this.$router.push(`Dashboard`);
+      console.log(this.connection);
+    }
   }
 }
 </script>
