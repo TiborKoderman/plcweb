@@ -1,10 +1,27 @@
 <template>
-  <div id="nav">
+  <div id="nav" v-if="!loggedin">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> | 
+    <router-link to="/login">Login</router-link>
+     <router-view/>
   </div>
-  <router-view/>
+ 
 </template>
+
+<script>
+export default {
+  name: 'App',
+  data: function() {
+    return {
+      connection: null,
+      loggedin: false,
+    }
+  },
+  created: function() {
+
+  }
+}
+</script>
 
 <style>
 #app {
