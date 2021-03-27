@@ -3,9 +3,9 @@
     <h1>This is the login page</h1>
 
     <form @submit.prevent>
-        <label for="username">USERNAME: </label><input class=loginInputField v-model="user.username" id="user"/><br>
+        <label for="username">USERNAME: </label><input class=loginInputField v-model="user.username" id="user" required/><br>
 
-        <label for="password">PASSWORD: </label><input class=loginInputField v-model="user.password" type="password" id="password"><br>
+        <label for="password">PASSWORD: </label><input class=loginInputField v-model="user.password" type="password" id="password" required><br>
         <div style="font-weight:bolder; color:red; font-size:12px">{{err}}</div>
         <button @click="submitMeth" type="submit" class="sbmtBttn">Submit</button>
     </form>
@@ -42,7 +42,7 @@ export default {
             {
                 this.$emit(`connectionSuccessful`,this.connection);
                 console.log(event);
-                
+                document.cookie = JSON.stringify(user);
             }
             if(msg===`Username or password is incorrect`)
             {
