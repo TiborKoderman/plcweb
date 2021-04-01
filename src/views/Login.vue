@@ -13,53 +13,56 @@
 </template>
 
 <script>
-import AppVue from '../App.vue'
+import { onBeforeUnmount } from '@vue/runtime-core';
+import connection from '../services/socket';
+
+
+
 export default {
   name: 'Login',
   components: {
   },
   data() {
       return{
-          connection: null,
           err: "",
           user:{
               username: "",
               password: "",
+              objType: "loginInfo"
           }
       }
   },
 
   methods:{
-    submitMeth(){
-        console.log("Starting connection to WebSocket Server")
-        this.connection = new WebSocket("ws://koderman.net:8088")
-        //username = document.getElementById("username");
+        submitMeth(){
+            console.log("Starting connection to WebSocket Server")
+                connection.send(JSON.stringify(this.user));
 
-        this.connection.onmessage = (event) => {
+                connection.onmessage = (event) => {
             let msg = event.data;
             //console.log(msg)
             if(msg === `Login success`)
             {
-                this.$emit(`connectionSuccessful`,this.connection);
+                this.$emit(`connectionSuccessful`,connection);
                 console.log(event);
-                document.cookie = JSON.stringify(user);
+                //document.cookie = JSON.stringify(user);
             }
             if(msg===`Username or password is incorrect`)
             {
                 this.err=msg;
                 console.log(`%c[WARN] ${this.err}`, "color:red");
+                //connection.close();
             }
         }
 
-        this.connection.onopen = (event) => {
+        connection.onopen = (event) => {
             console.log(event)
             console.log("Successfully connected to the websocket server...")
-            //this.connection.send(`message`);
-            this.connection.send(JSON.stringify(this.user));
         }
-
     }
-  }
+
+        
+    }
 }
 
 </script>

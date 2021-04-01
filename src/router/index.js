@@ -23,6 +23,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
+    props: ['connection'],
     component: () =>import('../views/Dashboard.vue')
   },
 ]

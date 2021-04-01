@@ -1,6 +1,6 @@
 <template>
   <div id="nav" v-if="this.$route.name!=='Dashboard'">
-    <router-link to="/">Home</router-link> |
+    <router-link to="/">Home</router-link> | 
     <router-link to="/about">About</router-link> | 
     <router-link to="/login">Login</router-link>
      <!-- <router-view/> -->
@@ -21,8 +21,8 @@ export default {
   methods:{
     handleConnectionSuccessful(connection){
       this.loggedin=true;
-      this.connection = connection;
-      this.$router.push(`Dashboard`);
+      this.$router.push('Dashboard');
+      console.log(`Successfully connecteted, transfering websocket: `)
       console.log(this.connection);
     }
   }
