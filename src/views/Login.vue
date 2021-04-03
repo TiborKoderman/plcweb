@@ -36,24 +36,24 @@ export default {
   methods:{
         submitMeth(){
             console.log("Starting connection to WebSocket Server")
-                connection.send(JSON.stringify(this.user));
+            connection.send(JSON.stringify(this.user));
 
-                connection.onmessage = (event) => {
-            let msg = event.data;
-            //console.log(msg)
-            if(msg === `Login success`)
-            {
-                this.$emit(`connectionSuccessful`,connection);
-                console.log(event);
-                //document.cookie = JSON.stringify(user);
+            connection.onmessage = (event) => {
+                let msg = event.data;
+                //console.log(msg)
+                if(msg === `Login success`)
+                {
+                    this.$emit(`connectionSuccessful`,connection);
+                    console.log(event);
+                    //document.cookie = JSON.stringify(user);
+                }
+                if(msg===`Username or password is incorrect`)
+                {
+                    this.err=msg;
+                    console.log(`%c[WARN] ${this.err}`, "color:red");
+                    //connection.close();
+                }
             }
-            if(msg===`Username or password is incorrect`)
-            {
-                this.err=msg;
-                console.log(`%c[WARN] ${this.err}`, "color:red");
-                //connection.close();
-            }
-        }
 
         connection.onopen = (event) => {
             console.log(event)

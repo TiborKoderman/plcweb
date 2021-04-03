@@ -2,18 +2,26 @@
   <h1>Dashboard</h1>
 
   <nav>
-    <!-- <li v-for:></li> -->
+    <li v-for="device in devices" :key="device.mac">
+      <div>
+      <h3>{{device.mac}} [{{device.type}}]</h3>
+      <DevicePLC mac="device.mac" />
+      </div>
+    </li>
   </nav>
 </template>
 
 <script>
 import connection from '../services/socket';
+import DevicePLC from '@/components/DevicePLC.vue'
 
 export default {
     name: 'Dashboard',
+    components: {DevicePLC},
     data() {
       return {
-        //connection: null,
+        connection: null,
+        devices: [],
       }
     },
     methods:{
@@ -33,6 +41,14 @@ export default {
         catch{
           this.$router.push(`Login`);
         }
+      }
+
+      connection.onmessage= (event)=>{
+        let msg = event.data;
+        console.log(msg)
+        let data = JSON.parse(msg);
+        if(data.type === "deviceList")
+          this.devices = data.data;
       }
     }
 }
