@@ -3,25 +3,25 @@
     <h4>Relay control</h4>
     <label>RELAY 1 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['AC1']">
     <span class="slider round"></span>
     </label><br>
 
     <label>RELAY 2 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['AC2']">
     <span class="slider round"></span>
     </label><br>
 
     <label>RELAY 3 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['AC3']">
     <span class="slider round"></span>
     </label><br>
 
     <label>RELAY 4 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['AC4']">
     <span class="slider round"></span>
     </label><br>
   </div>
@@ -30,25 +30,25 @@
     <h4>Opto-coupler control</h4>
     <label>OP-CUP 1 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['DC1']">
     <span class="slider round"></span>
     </label><br>
 
     <label>OP-CUP 2 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['DC2']">
     <span class="slider round"></span>
     </label><br>
 
     <label>OP-CUP 3 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['DC3']">
     <span class="slider round"></span>
     </label><br>
 
     <label>OP-CUP 4 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['DC4']">
     <span class="slider round"></span>
     </label><br>
   </div>
@@ -57,31 +57,31 @@
     <h4>GPIO control</h4>
     <label>GPIO 1 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['IO1']">
     <span class="slider round"></span>
     </label><br>
 
     <label>GPIO 2 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['IO2']">
     <span class="slider round"></span>
     </label><br>
 
     <label>GPIO 3 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['IO3']">
     <span class="slider round"></span>
     </label><br>
 
     <label>GPIO 4 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['IO4']">
     <span class="slider round"></span>
     </label><br>
 
     <label>GPIO 5 </label> 
     <label class="switch">
-    <input type="checkbox">
+    <input type="checkbox" v-model="allData['IO5']">
     <span class="slider round"></span>
     </label><br>
   </div>
@@ -105,18 +105,75 @@
 
   <div style="display:block; margin: 20px;">
   
-  <label for="AO1">Analog Out 1</label><input type="number" name="" id="AO1"> <br>
-  <label for="AO2">Analog Out 2</label><input type="number" name="" id="AO2">
-
+  <label for="AO1">Analog Out 1</label><input type="number" pattern="[0-9]{0,4}" id="AO1" v-model="allData['AO1']"> <br>
+  <label for="AO2">Analog Out 2</label><input type="number" pattern="[0-9]{0,4}" id="AO2" v-model="allData['AO2']">
   </div>
     
 </template>
 
 <script>
+
+import connection from "../services/socket";
+
 export default {
   name: 'DevicePLC',
   props: {
     mac: String,
+  },
+  data(){
+    return{
+      allData:{
+        AC1:0,
+        AC2:0,
+        AC3:0,
+        AC4:0,
+  
+        DC1:0,
+        DC2:0,
+        DC3:0,
+        DC4:0,
+  
+        IO1:0,
+        IO2:0,
+        IO3:0,
+        IO4:0,
+        IO5:0,
+
+        AO1:0,
+        AO2:0,
+
+        I1:0,
+        I2:0,
+        I3:0,
+        I4:0,
+      },
+    }
+    
+  },
+  mounted()
+  {
+    connection.onmessage = (event)=> {
+      
+      let msg = event.data;
+
+      let data = JSON.parse(msg);
+      //this.allData.mac = this.mac;
+      this.allData.I1 = data.IO1;
+      this.allData.I2 = data.IO2;
+      this.allData.I3 = data.IO3;
+      this.allData.I4 = data.IO4;
+
+      this.allData.AO1 = data.AO1;
+      this.allData.AO2 = data.AO2;
+    }
+  },
+  watch: {
+      allData:{
+        handler:function() {
+          console.log(JSON.stringify([this.mac,this.allData]));
+          connection.send(JSON.stringify([this.mac,this.allData]));
+        },deep: true
+      }
   }
 }
 </script>

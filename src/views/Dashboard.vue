@@ -28,7 +28,7 @@ export default {
 
     },
     created(){
-      console.log("Transfering websocket connection to the Dashboard view...")
+      console.log("Transfering websocket connection to the Dashboard view... ")
       console.log(connection);
        
       if(connection === null || connection===undefined)
