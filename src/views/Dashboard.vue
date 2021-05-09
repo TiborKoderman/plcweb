@@ -1,11 +1,12 @@
 <template>
+<title>Dashboard</title>
   <h1>Dashboard</h1>
 
   <nav>
     <li v-for="device in devices" :key="device.mac">
       <div>
       <h3>{{device.mac}} [{{device.type}}]</h3>
-      <DevicePLC mac="device.mac" />
+      <DevicePLC v-bind:mac="device.mac" />
       </div>
     </li>
   </nav>

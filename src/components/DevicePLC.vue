@@ -89,16 +89,16 @@
   <div style="display:inline-block; margin: 20px;">
   
   <div>
-    Input 1: 
+    Input 1: {{incommingData["I1"]}}
   </div>
   <div><br>
-    Input 2: 
+    Input 2: {{incommingData["I2"]}}
   </div><br>
   <div>
-    Input VP: 
+    Input VP:  {{incommingData["VP"]}}
   </div><br>
   <div>
-    Input VN: 
+    Input VN:  {{incommingData["VN"]}}
   </div><br>
 
   </div>
@@ -122,6 +122,7 @@ export default {
   },
   data(){
     return{
+      physAdrss: this.mac,
       allData:{
         AC1:0,
         AC2:0,
@@ -141,12 +142,14 @@ export default {
 
         AO1:0,
         AO2:0,
-
+      },
+      incommingData:
+      {
         I1:0,
         I2:0,
-        I3:0,
-        I4:0,
-      },
+        VP:0,
+        VN:0,
+      }
     }
     
   },
@@ -155,23 +158,26 @@ export default {
     connection.onmessage = (event)=> {
       
       let msg = event.data;
+      console.log(msg);
+
 
       let data = JSON.parse(msg);
       //this.allData.mac = this.mac;
-      this.allData.I1 = data.IO1;
-      this.allData.I2 = data.IO2;
-      this.allData.I3 = data.IO3;
-      this.allData.I4 = data.IO4;
+      if(data.objType==="cts")
+      {
+        this.incommingData.I1 = data.I1;
+        this.incommingData.I2 = data.I2;
+        this.incommingData.VN = data.VN;
+        this.incommingData.VP = data.VP;
+      }
 
-      this.allData.AO1 = data.AO1;
-      this.allData.AO2 = data.AO2;
     }
   },
   watch: {
       allData:{
         handler:function() {
-          console.log(JSON.stringify([this.mac,this.allData]));
-          connection.send(JSON.stringify([this.mac,this.allData]));
+          console.log(JSON.stringify({"objType":"stc","mac":this.physAdrss,"allData":this.allData}));
+          connection.send(JSON.stringify({"objType":"stc","mac":this.physAdrss,"allData":this.allData}));
         },deep: true
       }
   }
