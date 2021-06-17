@@ -3,8 +3,8 @@
   <h1>Dashboard</h1>
 
   <nav>
-    <li v-for="device in devices" :key="device.mac">
-      <div>
+    <li v-for="device in devices" :key="device.mac" style="list-style-type: none;">
+      <div style='margin-bottom: 100px;'>
       <h3>{{device.mac}} [{{device.type}}]</h3>
       <DevicePLC v-bind:mac="device.mac" />
       </div>
